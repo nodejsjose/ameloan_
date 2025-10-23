@@ -66,9 +66,11 @@
                             <div class="form-group row">
                                 <label class="col-xl-3 col-form-label">{{ _lang('Branch') }}</label>
                                 <div class="col-xl-9">
-                                    <select class="form-control select2-ajax" data-href="{{ route('branches.create') }}" data-title="{{ _lang('Add New Branch') }}" data-value="id" data-display="name"
-                                        data-table="branches" name="branch_id" id="user_branch_id" disabled>
+                                    <select class="form-control select2-ajax auto-multiple-select" data-href="{{ route('branches.create') }}" data-title="{{ _lang('Add New Branch') }}" data-value="id" data-display="name"
+                                        data-table="branches" name="branch_ids[]" id="user_branch_id" multiple disabled data-selected='[]'>
                                     </select>
+                                    {{-- fallback single branch field kept for compatibility --}}
+                                    <input type="hidden" name="branch_id" value="">
                                     <small class="text-primary"><i class="ti-info-alt"></i> <i>{{ _lang('If not assign any branch then user will get default branch access.') }}</i></small>
                                 </div>
                             </div>

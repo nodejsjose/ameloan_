@@ -64,10 +64,12 @@
                             <div class="form-group row">
                                 <label class="col-xl-3 col-form-label">{{ _lang('Branch') }}</label>
                                 <div class="col-xl-9">
-                                    <select class="form-control select2" name="branch_id" id="user_branch_id">
+                                    <select class="form-control select2 auto-multiple-select" name="branch_ids[]" id="user_branch_id" multiple data-selected='{{ json_encode($user->assignedBranchIds()) }}'>
                                         <option value="">{{ get_option('default_branch_name', 'Main Branch') }}</option>
-                                        {{ create_option("branches", "id", "name", $user->branch_id) }}
+                                        {{ create_option("branches", "id", "name") }}
                                     </select>
+                                    {{-- keep single branch_id for compatibility --}}
+                                    <input type="hidden" name="branch_id" value="{{ $user->branch_id }}">
                                     <small class="text-primary"><i class="ti-info-alt"></i> <i>{{ _lang('If not assign any branch then user will get default branch access.') }}</i></small>
                                 </div>
                             </div>

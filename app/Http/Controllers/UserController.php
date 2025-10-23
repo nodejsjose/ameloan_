@@ -91,6 +91,15 @@ class UserController extends Controller {
 
         $user->save();
 
+        // Sync multiple branch assignments if provided
+        if($request->has('branch_ids')){
+            $branch_ids = array_filter((array)$request->input('branch_ids'));
+            $user->branches()->sync($branch_ids);
+        } elseif($request->has('branch_id') && $request->input('branch_id') != ''){
+            // keep single branch for backward compatibility
+            $user->branches()->sync([$request->input('branch_id')]);
+        }
+
         //Prefix Output
         $user->status          = user_status($user->status);
         $user->user_type       = strtoupper($user->user_type);
@@ -189,6 +198,17 @@ class UserController extends Controller {
         }
 
         $user->save();
+
+        // Sync multiple branch assignments
+        if($request->has('branch_ids')){
+            $branch_ids = array_filter((array)$request->input('branch_ids'));
+            $user->branches()->sync($branch_ids);
+        } elseif($request->has('branch_id') && $request->input('branch_id') != ''){
+            $user->branches()->sync([$request->input('branch_id')]);
+        } else {
+            // if none provided, detach existing assignments
+            $user->branches()->detach();
+        }
 
         //Prefix Output
         $user->status          = user_status($user->status);

@@ -161,7 +161,13 @@ class MemberController extends Controller {
 		if (auth()->user()->user_type == 'admin') {
 			$member->branch_id = $request->branch_id;
 		} else {
-			$member->branch_id = auth()->user()->branch_id;
+			// If user has multiple assigned branches, pick the first as default for created members
+			if (method_exists(auth()->user(), 'assignedBranchIds')) {
+				$assigned = auth()->user()->assignedBranchIds();
+				$member->branch_id = !empty($assigned) ? $assigned[0] : auth()->user()->branch_id;
+			} else {
+				$member->branch_id = auth()->user()->branch_id;
+			}
 		}
 		if ($request->client_login == 1) {
 			$member->user_id = $user->id;
@@ -352,7 +358,12 @@ class MemberController extends Controller {
 		if (auth()->user()->user_type == 'admin') {
 			$member->branch_id = $request->branch_id;
 		} else {
-			$member->branch_id = auth()->user()->branch_id;
+			if (method_exists(auth()->user(), 'assignedBranchIds')) {
+				$assigned = auth()->user()->assignedBranchIds();
+				$member->branch_id = !empty($assigned) ? $assigned[0] : auth()->user()->branch_id;
+			} else {
+				$member->branch_id = auth()->user()->branch_id;
+			}
 		}
 		if ($request->client_login == 1) {
 			$member->user_id = $user->id;

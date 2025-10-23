@@ -16,4 +16,8 @@ class Branch extends Model {
         $this->attributes['name'] = get_option('default_branch_name', 'Main Branch');
     }
 
+    public function users(){
+        return $this->belongsToMany('App\Models\User', 'branch_user', 'branch_id', 'user_id')->withTimestamps();
+    }
+
 }

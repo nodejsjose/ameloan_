@@ -52,7 +52,24 @@ class User extends Authenticatable
 		return $this->hasOne('App\Models\Member','user_id')->withDefault();
 	}
 
+    // Single branch relation (kept for backward compatibility)
     public function branch(){
-		return $this->belongsTo('App\Models\Branch','branch_id')->withDefault();
-	}
+        return $this->belongsTo('App\Models\Branch','branch_id')->withDefault();
+    }
+
+    // Many-to-many branches assigned to the user
+    public function branches(){
+        return $this->belongsToMany('App\Models\Branch', 'branch_user', 'user_id', 'branch_id')->withTimestamps();
+    }
+
+    /**
+     * Return array of assigned branch IDs (including branch_id field if set)
+     */
+    public function assignedBranchIds(){
+        $ids = $this->branches()->pluck('branches.id')->toArray();
+        if($this->branch_id && !in_array($this->branch_id, $ids)){
+            $ids[] = $this->branch_id;
+        }
+        return $ids;
+    }
 }

@@ -9,6 +9,14 @@ trait Branch {
     public static function bootBranch() {
         static::addGlobalScope('branch_id', function (Builder $builder) {
             if (auth()->user()->user_type == 'user') {
+                if (method_exists(auth()->user(), 'assignedBranchIds')) {
+                    $assigned = auth()->user()->assignedBranchIds();
+                    if(!empty($assigned)){
+                        return $builder->whereIn('branch_id', $assigned);
+                    }
+                    // If assigned is empty, don't restrict
+                    return;
+                }
                 return $builder->where('branch_id', auth()->user()->branch_id);
             }else {
                 if (session('branch_id') != '') {

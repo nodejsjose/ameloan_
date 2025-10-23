@@ -56,7 +56,16 @@
 								<label class="control-label">{{ _lang('Branch') }}</label>
 								<select class="form-control" name="branch_id" disabled>
 									<option value="">{{ get_option('default_branch_name', 'Main Branch') }}</option>
-									{{ create_option('branches', 'id', 'name', $member->branch_id) }}
+									@php
+										$defaultBranch = $member->branch_id;
+										if(method_exists(auth()->user(), 'assignedBranchIds')){
+											$assigned = auth()->user()->assignedBranchIds();
+											if(!empty($assigned)){
+												$defaultBranch = $assigned[0];
+											}
+										}
+									@endphp
+									{{ create_option('branches', 'id', 'name', $defaultBranch) }}
                                 </select>
 							</div>
 						</div>
